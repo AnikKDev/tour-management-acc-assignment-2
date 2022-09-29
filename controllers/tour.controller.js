@@ -1,4 +1,4 @@
-const { getAllToorsService, addATourService } = require("../services/tours.service")
+const { getAllToorsService, addATourService, getSingleTourService } = require("../services/tours.service")
 
 
 module.exports.getAllTours = async (req, res, next) => {
@@ -8,11 +8,15 @@ module.exports.getAllTours = async (req, res, next) => {
 
             querySearch.fields = (req.query.fields).split(',').join(' ');
         }
-        const { page = 1, limit = 3 } = req.query;
-        if (page) {
+
+        if (req.query.page) {
+            const { page = 1, limit = 3 } = req.query;
             const skip = +(page - 1) * +limit;
             querySearch.skip = skip;
             querySearch.limit = limit;
+        }
+        if (req.query.sort) {
+            querySearch.sort = req.query.sort
         }
         const searchAll = {};
         const result = await getAllToorsService(searchAll, querySearch);
@@ -42,6 +46,19 @@ module.exports.addATour = async (req, res, next) => {
             success: false,
             message: "Something went wrong",
             data: err.message
+        })
+    }
+}
+
+// get single tour
+module.exports.getSingleTour = async (req, res, next) => {
+    try {
+        const result = await getSingleTourService(req.body.id);
+        res.send(result)
+    } catch (err) {
+        res.status(400).send({
+            success: false,
+            message: err.message
         })
     }
 }
