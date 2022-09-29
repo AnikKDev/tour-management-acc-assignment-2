@@ -7,4 +7,6 @@ const router = express.Router();
 
 router.route('/').get(getAllTours).post(addATour)
 
+// get specific tours
+
 module.exports = router;

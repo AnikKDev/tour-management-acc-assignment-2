@@ -3,7 +3,19 @@ const { getAllToorsService, addATourService } = require("../services/tours.servi
 
 module.exports.getAllTours = async (req, res, next) => {
     try {
-        const result = await getAllToorsService();
+        let querySearch = {};
+        if (req.query.fields) {
+
+            querySearch.fields = (req.query.fields).split(',').join(' ');
+        }
+        const { page = 1, limit = 3 } = req.query;
+        if (page) {
+            const skip = +(page - 1) * +limit;
+            querySearch.skip = skip;
+            querySearch.limit = limit;
+        }
+        const searchAll = {};
+        const result = await getAllToorsService(searchAll, querySearch);
         res.status(200).send({
             success: true,
             message: "Search successfull",
