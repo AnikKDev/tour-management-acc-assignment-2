@@ -1,5 +1,5 @@
 const { getAllToorsService, addATourService, getSingleTourService } = require("../services/tours.service")
-
+const viewCount = require('../middlewares/viewCount');
 
 module.exports.getAllTours = async (req, res, next) => {
     try {
